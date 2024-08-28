@@ -12,6 +12,11 @@
 	--color-text: rgba(0, 0, 0, 0.7);
 	--column-width: 42rem;
 	--column-margin-top: 4rem;
+	--primary-blue: #1652f0;
+	--secondary-blue: #0a46e4;
+	--light-blue: #e9f0ff;
+	--dark-blue: #05195a;
+	--white: #ffffff;
 	font-family: var(--font-body);
 	color: var(--color-text);
 }
@@ -28,9 +33,25 @@ body {
 			rgba(255, 255, 255, 0) 100%
 		),
 		linear-gradient(180deg, var(--color-bg-0) 0%, var(--color-bg-1) 15%, var(--color-bg-2) 50%);
+	font-family: 'Inter', sans-serif;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	height: 100vh;
+	margin: 0;
+	background: linear-gradient(135deg, var(--light-blue), var(--primary-blue));
+	color: var(--dark-blue);
 }
 
-h1,
+h1 {
+	font-size: 28px;
+	font-weight: 700;
+	margin-bottom: 24px;
+	color: var(--dark-blue);
+	opacity: 0;
+	animation: slideIn 0.5s ease-out forwards;
+}
 h2,
 p {
 	font-weight: 400;
@@ -104,4 +125,134 @@ button:focus:not(:focus-visible) {
 	position: absolute;
 	width: 1px;
 	white-space: nowrap;
+}
+
+.card {
+	background: var(--white);
+	border-radius: 16px;
+	box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+	padding: 40px;
+	text-align: center;
+	max-width: 280px;
+	width: 100%;
+
+	margin: 8px;
+
+	transform: translateY(20px);
+	opacity: 0;
+	animation: slideIn 0.5s ease-out forwards;
+}
+
+@keyframes slideIn {
+	to {
+		transform: translateY(0);
+		opacity: 1;
+	}
+}
+
+.amount {
+	font-size: 48px;
+	font-weight: 700;
+	color: var(--primary-blue);
+	margin-bottom: 32px;
+}
+
+.nfc-icon-container {
+	margin-bottom: 24px;
+	margin-left: auto;
+	margin-right: auto;
+	position: relative;
+	width: 120px;
+	height: 120px;
+}
+
+.nfc-icon {
+	width: 100%;
+	transform: translateX(-50%);
+	filter: invert(23%) sepia(91%) saturate(1964%) hue-rotate(213deg) brightness(97%) contrast(101%);
+	transition: all 0.3s ease;
+	position: absolute;
+}
+
+.button {
+	background: var(--primary-blue);
+	border: none;
+	border-radius: 50px;
+	color: var(--white);
+	cursor: pointer;
+	font-size: 18px;
+	font-weight: 600;
+	padding: 16px 32px;
+	transition: all 0.3s ease;
+	width: 100%;
+	box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.button:hover {
+	background: var(--secondary-blue);
+	transform: translateY(-2px);
+	box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+#faucetButton {
+	background: var(--primary-blue);
+	border: none;
+	border-radius: 50px;
+	color: var(--white);
+	cursor: pointer;
+	font-size: 18px;
+	font-weight: 600;
+	padding: 16px 32px;
+	transition: all 0.3s ease;
+	width: 100%;
+	box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+#faucetButton:hover {
+	background: var(--secondary-blue);
+	transform: translateY(-2px);
+	box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+#status {
+	margin-top: 24px;
+	font-weight: 600;
+	color: var(--dark-blue);
+	min-height: 24px;
+	opacity: 0;
+	transition: opacity 0.3s ease;
+}
+
+#status.active {
+	opacity: 1;
+	transition: opacity 0.5s ease;
+}
+
+.pulse {
+	animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+	0% {
+		transform: scale(1);
+		opacity: 1;
+	}
+	50% {
+		transform: scale(1.1);
+		opacity: 0.7;
+	}
+	100% {
+		transform: scale(1);
+		opacity: 1;
+	}
+}
+
+.navbar {
+	display: flex;
+	gap: 8px;
+	opacity: 0.5;
+}
+
+.nav-item {
+	opacity: 1;
 }

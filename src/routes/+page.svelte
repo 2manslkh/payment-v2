@@ -1,13 +1,13 @@
 <script>
-	import Counter from './Counter.svelte';
 	import welcome from '$lib/images/svelte-welcome.webp';
 	import welcome_fallback from '$lib/images/svelte-welcome.png';
+	import Counter from '../components/Counter.svelte';
 </script>
 
-<svelte:head>
+<!-- <svelte:head>
 	<title>Home</title>
 	<meta name="description" content="Svelte demo app" />
-</svelte:head>
+</svelte:head> -->
 
 <section>
 	<h1>
@@ -20,6 +20,16 @@
 
 		to your new<br />SvelteKit app
 	</h1>
+
+	<div class="wrapper">
+		<div class="navbar" style="flex-direction: column; opacity: 1;">
+			<a class="nav-item" id="link-demo" href="/demo">- Pay in ETH</a>
+			<a class="nav-item" href="/demo-712">- Gasless Pay in Coins</a>
+			<a class="nav-item" href="/onboarding">- Onboarding</a>
+			<a class="nav-item" href="/merchant">- Merchant</a>
+			<a class="nav-item" href="/scan">- Scan</a>
+		</div>
+	</div>
 
 	<h2>
 		try editing <strong>src/routes/+page.svelte</strong>
