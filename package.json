@@ -43,8 +43,18 @@
 	"type": "module",
 	"dependencies": {
 		"@arx-research/libhalo": "^1.6.1",
+		"@ethersproject/abstract-signer": "^5.7.0",
+		"@ethersproject/bytes": "^5.7.0",
+		"@ethersproject/hash": "^5.7.0",
+		"@ethersproject/keccak256": "^5.7.0",
+		"@ethersproject/properties": "^5.7.0",
+		"@ethersproject/providers": "^5.7.2",
+		"@ethersproject/transactions": "^5.7.0",
+		"dotenv": "^16.4.5",
+		"ethers": "^6.13.2",
 		"jsqr": "^1.4.0",
-		"viem": "^2.20.1",
+		"permissionless": "^0.1.19",
+		"viem": "^2.9.23",
 		"vite-plugin-node-polyfills": "^0.22.0"
 	}
 }

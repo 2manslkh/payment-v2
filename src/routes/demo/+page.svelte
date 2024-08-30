@@ -1,6 +1,16 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import { ethers } from 'ethers';
+	import {
+		createPublicClient,
+		http,
+		parseEther,
+		serializeTransaction,
+		keccak256,
+		createWalletClient,
+		type TransactionSerializable,
+		type Signature
+	} from 'viem';
+	import { base } from 'viem/chains';
 	import { execHaloCmdWeb } from '@arx-research/libhalo/api/web';
 	import type { StatusCallbackDetails } from '@arx-research/libhalo/types';
 
@@ -8,7 +18,12 @@
 	const amount = '0.00001';
 	const recipientAddress = '0x985A29E88E75394DbDaE41a269409f701ccf6a43';
 	const baseRpcUrl = 'https://sepolia.base.org';
-	const chainId = 84532;
+
+	// Create Viem client
+	const publicClient = createPublicClient({
+		chain: base,
+		transport: http(baseRpcUrl)
+	});
 
 	// Reactive variables
 	let status = '';
@@ -51,44 +66,49 @@
 	// Main payment function
 	async function handlePayment() {
 		try {
-			const provider = new ethers.providers.JsonRpcProvider(baseRpcUrl);
-
 			const nfcResult = await execHaloCmdWeb('get_pkeys', { statusCallback: updateStatusPhase2 });
 
 			const [nonce, gasPrice] = await Promise.all([
-				provider.getTransactionCount(nfcResult.etherAddresses['1']),
-				provider.getGasPrice()
+				publicClient.getTransactionCount({ address: nfcResult.etherAddresses['1'] }),
+				publicClient.getGasPrice()
 			]);
 
-			const transaction = {
+			const transaction: TransactionSerializable = {
 				to: recipientAddress,
-				value: ethers.utils.parseEther(amount),
+				value: parseEther(amount),
 				nonce,
-				gasLimit: 21000,
+				gas: 21000n,
 				gasPrice,
-				chainId
+				chainId: base.id
 			};
 
-			const serializedTx = ethers.utils.serializeTransaction(transaction);
-			const digest = ethers.utils.keccak256(serializedTx).slice(2);
+			const serializedTx = serializeTransaction(transaction);
+			const digest = keccak256(serializedTx).slice(2);
 
 			const signedTxResult = await execHaloCmdWeb(
 				{ name: 'sign', digest, keyNo: 1 },
 				{ statusCallback: updateStatusPhase2 }
 			);
 
-			const signature = {
-				r: '0x' + signedTxResult.signature.raw.r,
-				s: '0x' + signedTxResult.signature.raw.s,
-				v: signedTxResult.signature.raw.v
+			const signature: Signature = {
+				r: `0x${signedTxResult.signature.raw.r}`,
+				s: `0x${signedTxResult.signature.raw.s}`,
+				v: BigInt(signedTxResult.signature.raw.v)
 			};
 
-			const signedTx = ethers.utils.serializeTransaction(transaction, signature);
-			const tx = await provider.sendTransaction(signedTx);
+			const walletClient = createWalletClient({
+				chain: base,
+				transport: http(baseRpcUrl)
+			});
+
+			const hash = await walletClient.sendRawTransaction({
+				serializedTransaction: serializeTransaction(transaction, signature)
+			});
+
 			showStatus('Confirming on blockchain...');
-			await tx.wait();
+			await publicClient.waitForTransactionReceipt({ hash });
 			showStatus('Payment Successful!');
-			showLink(tx.hash);
+			showLink(hash);
 		} catch (error) {
 			console.error('Payment failed:', error);
 			showStatus(`Payment Failed: ${error.message}`);
@@ -102,7 +122,7 @@
 
 <svelte:head>
 	<title>Pay in ETH</title>
-	<script src="https://cdn.ethers.io/lib/ethers-5.7.2.umd.min.js"></script>
+	<script src="https://unpkg.com/viem"></script>
 	<script
 		src="https://github.com/arx-research/libhalo/releases/download/libhalo-v1.6.1/libhalo.js"
 	></script>

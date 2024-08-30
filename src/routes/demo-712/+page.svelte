@@ -136,7 +136,7 @@
 			console.log('Permit signature:', signature);
 
 			// Send the permit to the relay endpoint
-			const response = await fetch('/relay', {
+			const response = await fetch('/api/relay', {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json'
@@ -171,13 +171,8 @@
 	<title>Pay in Coins</title>
 </svelte:head>
 
-<div class="navbar">
-	<a class="nav-item" id="link-demo" href="/demo">Demo</a>
-	<a class="nav-item" href="/demo-712">Demo EIP712</a>
-</div>
-
 <div class="card">
-	<h1>AmePay</h1>
+	<h1>EasyPay on Base</h1>
 	<div class="amount">{amount} Coin</div>
 	<div class="nfc-icon-container">
 		<img
